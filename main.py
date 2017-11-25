@@ -10,10 +10,7 @@ UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = set(['jpeg', 'jpg', 'png', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-stripe_keys = {
-  'secret_key': 'sk_test_WaxjnLZAkfqw6ZGBfu0qbcIV',
-  'publishable_key': 'pk_test_1aLpisPvcAjYljeMTae0Kyh2'
-}
+
 
 stripe.api_key = stripe_keys['secret_key']
 
