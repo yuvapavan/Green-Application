@@ -1,7 +1,7 @@
 from flask import *
 import sqlite3, hashlib, os
 import os
-import stripe
+
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -11,8 +11,6 @@ ALLOWED_EXTENSIONS = set(['jpeg', 'jpg', 'png', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-
-stripe.api_key = stripe_keys['secret_key']
 
 def getLoginDetails():
     with sqlite3.connect('database235.db') as conn:
@@ -222,15 +220,15 @@ def loginForm():
 
 @app.route("/login", methods = ['POST', 'GET'])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+    if request.method == 'GET':
+        password = request.args.get('pwd')
+        email = request.args.get('em')
         if is_valid(email, password):
             session['email'] = email
-            return redirect(url_for('root'))
+            return json.dumps({"OK":200}),{'Content-Type':'application/json'}
         else:
             error = 'Invalid UserId / Password'
-            return render_template('login.html', error=error)
+            return json.dumps({"invalid":404}),{'Content-Type':'application/json'}
 
 #call APi as
 #http://localhost:5000/productDescription?productId=4
@@ -328,12 +326,12 @@ def is_valid(email, password):
 
 @app.route("/register", methods = ['GET', 'POST'])
 def register():
-    if request.method == 'POST':
+    if request.method == 'GET':
         print ("in Post")
         password = request.args.get('pwd')
-        email = "mrajesh971@gmail.com"
-        firstName = "Rafael"
-        lastName = "Nadal"
+        email = request.args.get('em')
+        firstName = request.args.get('fname')
+        lastName = request.args.get('lname')
         address1 = "San Jose"
         address2 = "Cali"
         zipcode = "95113"
@@ -347,7 +345,7 @@ def register():
                 cur = con.cursor()
                 cur.execute('INSERT INTO users (password, email, firstName, lastName, address1, address2, zipcode, city, state, country, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (hashlib.md5(password.encode()).hexdigest(), email, firstName, lastName, address1, address2, zipcode, city, state, country, phone))
                 con.commit()
-                cur.execute('SELECT email, password FROM users')
+                cur.execute('SELECT email, password,firstName,lastName FROM users')
                 users=cur.fetchall()
                 msg = "Registered Successfully"
             except:
@@ -378,24 +376,7 @@ def parse(data):
         ans.append(curr)
     return ans
 
-@app.route('/charge', methods=['GET', 'POST'])
-def charge():
-    # Amount in cents
-    amount = 500
 
-    customer = stripe.Customer.create(
-        email='customer@example.com',
-        #source=request.form['stripeToken']
-    )
-
-    charge = stripe.Charge.create(
-        customer=customer.id,
-        amount=amount,
-        currency='usd',
-        description='Flask Charge'
-    )
-
-    return json.dumps({'amount':amount})
 
 if __name__ == '__main__':
     app.run(debug=True)
