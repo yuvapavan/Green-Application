@@ -41,6 +41,80 @@ def root():
     return json.dumps({'itemData':itemData, 'loggedIn':loggedIn, 'firstNam':firstName, 'noOfItem':noOfItems, 'categoryData':categoryData})   
     #return render_template('home.html', itemData=itemData, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems, categoryData=categoryData)
 
+
+
+@app.route("/shelters")
+def shelters():
+    with sqlite3.connect('database297.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT Name,Address,Phone FROM Shelter')
+        itemData = cur.fetchall()
+        a = parse(itemData)
+        l=[]
+        for i in range(0,len(a[0])):
+             d={}
+             d['Name']=a[0][i][0]
+             d['Location']=a[0][i][1]
+             d["PhoneNumber"]=a[0][i][2]
+             l.append(d)
+    return json.dumps({'data':l}) 
+
+
+@app.route("/emergency")
+def emergency():
+    with sqlite3.connect('database297.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT Name,Address,Phone FROM Emergency')
+        itemData = cur.fetchall()
+        a = parse(itemData)
+        l=[]
+        for i in range(0,len(a[0])):
+             d={}
+             d['Name']=a[0][i][0]
+             d['Address']=a[0][i][1]
+             d["PhoneNumber"]=a[0][i][2]
+             l.append(d)
+    return json.dumps({'data':l}) 
+
+
+
+@app.route("/rescuers")
+def rescuers():
+    with sqlite3.connect('database297.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT Name,Phone,Latitude,Longitude FROM Rescuer')
+        itemData = cur.fetchall()
+        a = parse(itemData)
+        l=[]
+        for i in range(0,len(a[0])):
+             d={}
+             d['Name']=a[0][i][0]
+             d['Phone']=a[0][i][1]
+             d["Latitude"]=a[0][i][2]
+             d["Longitude"]=a[0][i][3]
+             l.append(d)
+    return json.dumps({'data':l})
+
+
+@app.route("/victims")
+def victims():
+    with sqlite3.connect('database297.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT Name,Phone,Latitude,Longitude FROM Victims')
+        itemData = cur.fetchall()
+        a = parse(itemData)
+        l=[]
+        for i in range(0,len(a[0])):
+             d={}
+             d['Name']=a[0][i][0]
+             d['Phone']=a[0][i][1]
+             d["Latitude"]=a[0][i][2]
+             d["Longitude"]=a[0][i][3]
+             l.append(d)
+    return json.dumps({'data':l})  
+
+
+
 @app.route("/add")
 def admin():
     with sqlite3.connect('database235.db') as conn:
