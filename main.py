@@ -1,4 +1,5 @@
 from flask import *
+from flask import jsonify
 import sqlite3, hashlib, os
 import os
 
@@ -47,7 +48,7 @@ def root():
 def shelters():
     with sqlite3.connect('database297.db') as conn:
         cur = conn.cursor()
-        cur.execute('SELECT Name,Address,Phone FROM Shelter')
+        cur.execute('SELECT Name,Address,Phone,Latitude,Longitude FROM Shelter')
         itemData = cur.fetchall()
         a = parse(itemData)
         l=[]
@@ -56,8 +57,10 @@ def shelters():
              d['Name']=a[0][i][0]
              d['Location']=a[0][i][1]
              d["PhoneNumber"]=a[0][i][2]
+             d["latitude"]=a[0][i][3]
+             d["longitude"]=a[0][i][4]
              l.append(d)
-    return json.dumps({'data':l}) 
+    return jsonify({'data':l}),{'Content-Type':'application/json'}
 
 
 @app.route("/emergency")
@@ -74,7 +77,7 @@ def emergency():
              d['Address']=a[0][i][1]
              d["PhoneNumber"]=a[0][i][2]
              l.append(d)
-    return json.dumps({'data':l}) 
+    return jsonify({'data':l}),{'Content-Type':'application/json'} 
 
 
 
@@ -93,7 +96,7 @@ def rescuers():
              d["Latitude"]=a[0][i][2]
              d["Longitude"]=a[0][i][3]
              l.append(d)
-    return json.dumps({'data':l})
+    return jsonify({'data':l}),{'Content-Type':'application/json'}
 
 
 @app.route("/victims")
@@ -111,7 +114,7 @@ def victims():
              d["Latitude"]=a[0][i][2]
              d["Longitude"]=a[0][i][3]
              l.append(d)
-    return json.dumps({'data':l})  
+    return jsonify({'data':l}),{'Content-Type':'application/json'}  
 
 
 
