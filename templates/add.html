@@ -2,22 +2,31 @@
 <html>
 <head>
 <title>Admin</title>
+
 </head>
 <body>
 <h2>Add items</h2>
 <form action="/addItem" method="POST" enctype="multipart/form-data">
 	Name: <input type="text" name="name"><br>
-	Price: <input type="text" name="price"><br>
-	Description: <textarea name="description" rows=3 cols="40"></textarea><br>
-	Image: <input type="file" name="image"><br>
-	Stock: <input type="text" name="stock"><br>
+	<br>
+	Price: <input type="text" name="price"><br><br>
+    ProductId: <input type="text" name="id1"><br><br>
+    Review: <input type="text" name="review"><br><br>
+	Description: <textarea name="description" rows=3 cols="40"></textarea><br><br>
+	<div id="Image" align="center">
+	Image: <input type="file" name="image"><br><br>
+	</div>
+	Stock: <input type="text" name="stock"><br><br>
 	Category: <select name="category">
 		{% for row in categories %}
 			<option value="{{row[0]}}">{{row[1]}}</option>
 		{% endfor %}
-	</select><br>
+	</select><br><br>
 	<input type="submit">
 </form>
 </body>
+
+
+
 </html>
 
