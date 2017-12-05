@@ -112,22 +112,23 @@ def addItem():
         name = request.form['name']
         
         price = float(request.form['price'])
-        stock = int(request.form[''])
+        stock = int(request.form['stock'])
         description = request.form['description']
         categoryId = int(request.form['category'])
         review= request.form['review']
 
-        #Uploading image procedure
-        image = request.files['image']
-        if image and allowed_file(image.filename):
-            filename = secure_filename(image.filename)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        imagename = filename
+        # #Uploading image procedure
+        # image = request.files['image']
+        # if image and allowed_file(image.filename):
+        #     filename = secure_filename(image.filename)
+        #     image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        imagename = "solar-40"
+
         with sqlite3.connect('database235.db') as conn:
             try:
                 cur = conn.cursor()
                 print ("cmg here")
-                cur.execute('''INSERT INTO products (name, price, description, image, stock, categoryId,Review) VALUES (?,?, ?, ?, ?, ?, ?,?)''', (name, price, description, imagename, stock, categoryId,review))
+                cur.execute('''INSERT INTO products (name, price, description, image, stock,Review,categoryId) VALUES (?, ?, ?, ?, ?, ?, ?)''', (name, price, description, imagename, stock, review, categoryId))
                 print ("here")
                 conn.commit()
                 msg="added successfully"
@@ -147,12 +148,12 @@ def remove():
         cur.execute('SELECT productId, name, price, description, image, stock FROM products')
         data = cur.fetchall()
     conn.close()
-    #return json.dumps({'data':data})
-    return json.dumps({'data':data})
+    return render_template('remove.html', data=data)
+    # return json.dumps({'data':data})
 
+#http://localhost:9000/removeItem?productId=18
 @app.route("/removeItem")
 def removeItem():
-    loggedIn, firstName, noOfItems = getLoginDetails()
     productId = request.args.get('productId')
     with sqlite3.connect('database235.db') as conn:
         try:
@@ -169,9 +170,9 @@ def removeItem():
             msg = "Error occured"
     conn.close()
     print(msg)
-    itemData = parse(itemData)
-    return json.dumps({'itemData':itemData, 'loggedIn':loggedIn, 'firstNam':firstName, 'noOfItem':noOfItems, 'categoryData':categoryData})
-    
+    print(msg)
+    return redirect(url_for('root'))
+   
 
 #Call API like this 
 #http://localhost:5000/displayCategory?categoryId=2
