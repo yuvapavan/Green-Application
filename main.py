@@ -272,7 +272,7 @@ def api_message():
 			con.rollback()
 			msg = "Error occured"
 	con.close()
-	return json.dumps({"data":msg})
+	return json.dumps({"data":msg}),{'Content-Type':'application/json'}
 
 
     
