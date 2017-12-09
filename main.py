@@ -25,6 +25,79 @@ def root():
     itemData = parse(itemData)
     return json.dumps({'itemData':itemData})   
 
+@app.route("/shelters")
+def shelters():
+    with sqlite3.connect('database297.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT Name,Address,Phone,Latitude,Longitude FROM Shelter')
+        itemData = cur.fetchall()
+        a = parse(itemData)
+        l=[]
+        for i in range(0,len(a[0])):
+             d={}
+             d['Name']=a[0][i][0]
+             d['Location']=a[0][i][1]
+             d["PhoneNumber"]=a[0][i][2]
+             d["latitude"]=a[0][i][3]
+             d["longitude"]=a[0][i][4]
+             l.append(d)
+    return jsonify({'data':l}),{'Content-Type':'application/json'}
+
+
+@app.route("/emergency")
+def emergency():
+    with sqlite3.connect('database297.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT Name,Address,Phone FROM Emergency')
+        itemData = cur.fetchall()
+        a = parse(itemData)
+        l=[]
+        for i in range(0,len(a[0])):
+             d={}
+             d['Name']=a[0][i][0]
+             d['Address']=a[0][i][1]
+             d["PhoneNumber"]=a[0][i][2]
+             l.append(d)
+    return jsonify({'data':l}),{'Content-Type':'application/json'} 
+
+
+
+@app.route("/rescuers")
+def rescuers():
+    with sqlite3.connect('database297.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT Name,Phone,Latitude,Longitude FROM Rescuer')
+        itemData = cur.fetchall()
+        a = parse(itemData)
+        l=[]
+        for i in range(0,len(a[0])):
+             d={}
+             d['Name']=a[0][i][0]
+             d['Phone']=a[0][i][1]
+             d["Latitude"]=a[0][i][2]
+             d["Longitude"]=a[0][i][3]
+             l.append(d)
+    return jsonify({'data':l}),{'Content-Type':'application/json'}
+
+
+@app.route("/victims")
+def victims():
+    with sqlite3.connect('database297.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT Name,Phone,Latitude,Longitude FROM Victims')
+        itemData = cur.fetchall()
+        a = parse(itemData)
+        l=[]
+        for i in range(0,len(a[0])):
+             d={}
+             d['Name']=a[0][i][0]
+             d['Phone']=a[0][i][1]
+             d["Latitude"]=a[0][i][2]
+             d["Longitude"]=a[0][i][3]
+             l.append(d)
+    return jsonify({'data':l}),{'Content-Type':'application/json'}  
+
+
 
 
 @app.route("/personalinfo")
